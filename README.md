@@ -39,7 +39,7 @@ This project is built for anyone looking to improve their financial life with sm
 
 ---
 
-## 📌 Tech Stack (Planned)
+## 📌 Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Python, Django
