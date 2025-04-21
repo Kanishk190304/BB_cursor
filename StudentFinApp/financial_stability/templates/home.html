@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Financial Stability - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row align-items-center py-5">
+        <div class="col-md-6">
+            <h1 class="display-4 fw-bold">Take Control of Your Student Finances</h1>
+            <p class="lead text-muted">Track expenses, set budgets, and achieve your financial goals while building smart money habits for life.</p>
+            <div class="mt-4">
+                <a href="#" class="btn btn-primary btn-lg me-2"><i class="fas fa-user-plus me-2"></i>Sign Up Free</a>
+                <a href="#features" class="btn btn-outline-secondary btn-lg"><i class="fas fa-info-circle me-2"></i>Learn More</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="{% static 'images/finance-hero.svg' %}" alt="Financial Management Illustration" class="img-fluid" onerror="this.src='https://via.placeholder.com/600x400?text=Student+Finance+App'">
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="row text-center py-5">
+        <div class="col-md-4">
+            <div class="stat-card card h-100">
+                <div class="card-body">
+                    <div class="icon"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="stat-value">87%</div>
+                    <div class="stat-label">of users improved their savings</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card card h-100">
+                <div class="card-body">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-value">$420</div>
+                    <div class="stat-label">average monthly savings</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card card h-100">
+                <div class="card-body">
+                    <div class="icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-value">15K+</div>
+                    <div class="stat-label">students using FinStable</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="display-5 fw-bold">Features Designed for Students</h2>
+            <p class="lead text-muted">Everything you need to master your finances during college and beyond.</p>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-wallet fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title h5 text-center">Smart Budgeting</h3>
+                    <p class="card-text">Create custom budgets for categories like Food, Hangouts, and Books. Get alerts when you're close to limits.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-chart-pie fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title h5 text-center">Expense Tracking</h3>
+                    <p class="card-text">Log expenses easily and see where your money goes with beautiful charts and spending breakdowns.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-piggy-bank fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title h5 text-center">Savings Goals</h3>
+                    <p class="card-text">Set savings targets for emergencies, spring break, or a new laptop. Track progress and celebrate milestones.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title h5 text-center">Financial Education</h3>
+                    <p class="card-text">Learn money management through bite-sized tips and mini-courses designed specifically for students.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-trophy fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title h5 text-center">Achievements</h3>
+                    <p class="card-text">Earn badges and complete challenges like "No-Spend Week" to make building good financial habits fun.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title h5 text-center">Group Savings</h3>
+                    <p class="card-text">Team up with friends for group saving challenges and share money-saving hacks with your peers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Section -->
+    <div class="row py-5 align-items-center">
+        <div class="col-md-6 order-md-2">
+            <h2 class="fw-bold">See Your Financial Health at a Glance</h2>
+            <p>Our intuitive dashboard gives you a complete overview of your finances. Track your spending patterns, monitor budget limits, and visualize your progress toward financial goals.</p>
+            <ul class="list-unstyled">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Real-time expense tracking</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Visual budget indicators</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Savings goal trackers</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Spending category breakdowns</li>
+            </ul>
+        </div>
+        <div class="col-md-6 order-md-1">
+            <img src="{% static 'images/dashboard-demo.png' %}" alt="Dashboard Demo" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/600x400?text=Financial+Dashboard'">
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">What Students Say</h2>
+            <p class="text-muted">Join thousands of students who are taking control of their finances.</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle p-2 me-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">Alex T.</h5>
+                            <small class="text-muted">Engineering Major</small>
+                        </div>
+                    </div>
+                    <p class="card-text">"This app helped me save for a study abroad semester! I never realized how much I was spending on coffee until I started tracking."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle p-2 me-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">Jamie K.</h5>
+                            <small class="text-muted">Business Student</small>
+                        </div>
+                    </div>
+                    <p class="card-text">"The financial education module taught me about credit scores, which helped me build credit while in college. Game changer!"</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-circle p-2 me-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">Taylor M.</h5>
+                            <small class="text-muted">Psychology Major</small>
+                        </div>
+                    </div>
+                    <p class="card-text">"My roommates and I use the group saving challenge for our apartment expenses. We've saved enough for a spring break trip!"</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="row py-5">
+        <div class="col-12 text-center">
+            <div class="card bg-primary text-white p-5">
+                <div class="card-body">
+                    <h2 class="display-5 fw-bold">Ready to Take Control of Your Finances?</h2>
+                    <p class="lead">Join thousands of students building financial skills that last a lifetime.</p>
+                    <a href="#" class="btn btn-light btn-lg mt-3"><i class="fas fa-user-plus me-2"></i>Sign Up Free</a>
+                    <p class="small mt-3 mb-0">No credit card required. Free for students.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Simple animation for the home page
+    document.addEventListener('DOMContentLoaded', function() {
+        const heroImage = document.querySelector('.img-fluid');
+        if (heroImage) {
+            heroImage.classList.add('pulse');
+        }
+    });
+</script>
+{% endblock %} 
