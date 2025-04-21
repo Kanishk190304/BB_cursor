@@ -117,7 +117,7 @@ function initializeCharts() {
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.label + ': $' + context.raw;
+                                return context.label + ': Rs. ' + context.raw;
                             }
                         }
                     }
@@ -157,7 +157,7 @@ function initializeCharts() {
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.dataset.label + ': $' + context.raw;
+                                return context.dataset.label + ': Rs. ' + context.raw;
                             }
                         }
                     }
@@ -167,7 +167,7 @@ function initializeCharts() {
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value;
+                                return 'Rs. ' + value;
                             }
                         }
                     }
@@ -200,7 +200,7 @@ function initializeCharts() {
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.dataset.label + ': $' + context.raw;
+                                return context.dataset.label + ': Rs. ' + context.raw;
                             }
                         }
                     }
@@ -213,7 +213,7 @@ function initializeCharts() {
                         stacked: false,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value;
+                                return 'Rs. ' + value;
                             }
                         }
                     }
