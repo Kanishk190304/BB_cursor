@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Update Savings Progress - Student Financial Stability{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-piggy-bank me-2"></i>Update Savings Progress</h4>
+            </div>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">{{ savings_goal.name }}</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <p class="card-text mb-0"><strong>Current:</strong></p>
+                                <h5 class="text-success">Rs. {{ savings_goal.current_amount }}</h5>
+                            </div>
+                            <div class="col-6 text-end">
+                                <p class="card-text mb-0"><strong>Target:</strong></p>
+                                <h5>Rs. {{ savings_goal.target_amount }}</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ savings_goal.get_percentage }}%" 
+                                 aria-valuenow="{{ savings_goal.get_percentage }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                        <p class="text-center text-muted small mb-0">{{ savings_goal.get_percentage }}% of goal achieved</p>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.amount.id_for_label }}" class="form-label">Add Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rs.</span>
+                            {{ form.amount }}
+                        </div>
+                        {% if form.amount.errors %}
+                        <div class="text-danger">
+                            {% for error in form.amount.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">{{ form.amount.help_text }}</div>
+                    </div>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6 class="mb-2"><i class="fas fa-lightbulb me-2 text-warning"></i>Tip</h6>
+                            <p class="mb-0 small">When you add progress to your savings goal, we'll create a transaction record to help you track your savings history.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'savings_goal_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus-circle me-1"></i>Add Progress
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

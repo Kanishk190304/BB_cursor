@@ -1,0 +1,202 @@
+[
+    {
+        "model": "core.category",
+        "pk": 1,
+        "fields": {
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#e74c3c",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 2,
+        "fields": {
+            "name": "Housing",
+            "icon": "home",
+            "color": "#3498db",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 3,
+        "fields": {
+            "name": "Transportation",
+            "icon": "car",
+            "color": "#f39c12",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 4,
+        "fields": {
+            "name": "Entertainment",
+            "icon": "film",
+            "color": "#9b59b6",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 5,
+        "fields": {
+            "name": "Healthcare",
+            "icon": "heartbeat",
+            "color": "#2ecc71",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 6,
+        "fields": {
+            "name": "Education",
+            "icon": "graduation-cap",
+            "color": "#1abc9c",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 7,
+        "fields": {
+            "name": "Utilities",
+            "icon": "bolt",
+            "color": "#e67e22",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 8,
+        "fields": {
+            "name": "Clothing",
+            "icon": "tshirt",
+            "color": "#34495e",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 9,
+        "fields": {
+            "name": "Personal Care",
+            "icon": "shower",
+            "color": "#7f8c8d",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 10,
+        "fields": {
+            "name": "Gifts",
+            "icon": "gift",
+            "color": "#d35400",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 11,
+        "fields": {
+            "name": "Savings",
+            "icon": "piggy-bank",
+            "color": "#4caf50",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 12,
+        "fields": {
+            "name": "Miscellaneous",
+            "icon": "ellipsis-h",
+            "color": "#95a5a6",
+            "is_expense": true
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 13,
+        "fields": {
+            "name": "Salary",
+            "icon": "money-bill-wave",
+            "color": "#2ecc71",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 14,
+        "fields": {
+            "name": "Freelancing",
+            "icon": "laptop-code",
+            "color": "#3498db",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 15,
+        "fields": {
+            "name": "Allowance",
+            "icon": "wallet",
+            "color": "#9b59b6",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 16,
+        "fields": {
+            "name": "Gift",
+            "icon": "gift",
+            "color": "#e74c3c",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 17,
+        "fields": {
+            "name": "Investment",
+            "icon": "chart-line",
+            "color": "#f39c12",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 18,
+        "fields": {
+            "name": "Scholarship",
+            "icon": "university",
+            "color": "#1abc9c",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 19,
+        "fields": {
+            "name": "Refund",
+            "icon": "undo",
+            "color": "#34495e",
+            "is_expense": false
+        }
+    },
+    {
+        "model": "core.category",
+        "pk": 20,
+        "fields": {
+            "name": "Other Income",
+            "icon": "plus-circle",
+            "color": "#7f8c8d",
+            "is_expense": false
+        }
+    }
+] 

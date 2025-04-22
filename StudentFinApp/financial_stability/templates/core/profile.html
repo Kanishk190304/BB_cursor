@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile - Student Financial Stability{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-cog me-2"></i>Profile Settings</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px">
+                                    <i class="fas fa-user fa-3x text-primary"></i>
+                                </div>
+                                <h5>{{ user.username }}</h5>
+                                <p class="text-muted">{{ user.email }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <h5 class="mb-3">Financial Profile</h5>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.monthly_income.id_for_label }}" class="form-label">Monthly Income (Rs.)</label>
+                                {{ form.monthly_income }}
+                                {% if form.monthly_income.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.monthly_income.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Your regular monthly income</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.emergency_fund_goal.id_for_label }}" class="form-label">Emergency Fund Goal (Rs.)</label>
+                                {{ form.emergency_fund_goal }}
+                                {% if form.emergency_fund_goal.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.emergency_fund_goal.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Recommended: 3-6 months of expenses</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.preferred_currency.id_for_label }}" class="form-label">Preferred Currency</label>
+                                {{ form.preferred_currency }}
+                                {% if form.preferred_currency.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.preferred_currency.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.dark_mode }}
+                                <label class="form-check-label" for="{{ form.dark_mode.id_for_label }}">Enable Dark Mode</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="mb-4">
+                    
+                    <h5 class="mb-3">Account Statistics</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 class="mb-0">{{ user.transactions.count }}</h3>
+                                    <p class="text-muted mb-0">Total Transactions</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 class="mb-0">{{ user.savings_goals.count }}</h3>
+                                    <p class="text-muted mb-0">Savings Goals</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 class="mb-0">{{ user.achievements.count }}</h3>
+                                    <p class="text-muted mb-0">Achievements</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

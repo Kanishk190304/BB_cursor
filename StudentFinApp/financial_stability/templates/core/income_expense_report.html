@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Income & Expense Analysis - Student Financial Stability{% endblock %}
+
+{% block extra_css %}
+<style>
+    #months-filter .btn {
+        border-radius: 20px;
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+    .report-card {
+        transition: transform 0.2s;
+    }
+    .report-card:hover {
+        transform: translateY(-5px);
+    }
+    .card-stat {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="fas fa-chart-line me-2"></i>Income & Expense Analysis</h1>
+    <div id="months-filter" class="btn-group">
+        {% for option in months_options %}
+        <a href="{% url 'income_expense_report' %}?months={{ option }}" class="btn btn-{% if selected_months == option %}primary{% else %}outline-primary{% endif %}">
+            {{ option }} Months
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm report-card h-100 border-primary">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Average Monthly Income</h5>
+                <p class="card-stat text-primary">
+                    Rs. 
+                    {% with total=0 count=0 %}
+                        {% for income in chart_data.income %}
+                            {% with total=total|add:income count=count|add:1 %}{% endwith %}
+                        {% endfor %}
+                        {{ total|divisibleby:count|floatformat:0 }}
+                    {% endwith %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm report-card h-100 border-danger">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Average Monthly Expenses</h5>
+                <p class="card-stat text-danger">
+                    Rs. 
+                    {% with total=0 count=0 %}
+                        {% for expense in chart_data.expenses %}
+                            {% with total=total|add:expense count=count|add:1 %}{% endwith %}
+                        {% endfor %}
+                        {{ total|divisibleby:count|floatformat:0 }}
+                    {% endwith %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm report-card h-100 border-success">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Average Savings Rate</h5>
+                <p class="card-stat text-success">
+                    {% with total=0 count=0 %}
+                        {% for rate in chart_data.savings_rate %}
+                            {% with total=total|add:rate count=count|add:1 %}{% endwith %}
+                        {% endfor %}
+                        {{ total|divisibleby:count|floatformat:1 }}%
+                    {% endwith %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Income/Expense Chart -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Income vs Expenses Trend</h5>
+    </div>
+    <div class="card-body">
+        <div class="chart-container">
+            <canvas id="income-expense-chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Category Breakdown Charts -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Expense Breakdown</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="expense-pie-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-wallet me-2"></i>Income Sources</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="income-pie-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Savings Rate Chart -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-piggy-bank me-2"></i>Monthly Savings Rate</h5>
+    </div>
+    <div class="card-body">
+        <div class="chart-container">
+            <canvas id="savings-rate-chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Financial Insights -->
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Financial Insights</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title"><i class="fas fa-percentage text-primary me-2"></i>Savings Rate</h6>
+                        <p class="card-text small">
+                            {% with avg=0 count=0 %}
+                                {% for rate in chart_data.savings_rate %}
+                                    {% with avg=avg|add:rate count=count|add:1 %}{% endwith %}
+                                {% endfor %}
+                                {% with avg_rate=avg|divisibleby:count %}
+                                    {% if avg_rate > 20 %}
+                                    <span class="text-success">Your savings rate of {{ avg_rate|floatformat:1 }}% is excellent!</span> Financial experts recommend saving at least 20% of your income.
+                                    {% elif avg_rate > 10 %}
+                                    <span class="text-info">Your savings rate of {{ avg_rate|floatformat:1 }}% is good.</span> Try to reach for 20% for optimal financial health.
+                                    {% else %}
+                                    <span class="text-warning">Your savings rate of {{ avg_rate|floatformat:1 }}% could be improved.</span> Aim for at least 10-20% of your income.
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title"><i class="fas fa-chart-pie text-danger me-2"></i>Expense Analysis</h6>
+                        <p class="card-text small">
+                            {% if expense_chart_data.labels.0 %}
+                            Your highest expense category is {{ expense_chart_data.labels.0 }}. Consider reviewing your spending in this area to find potential savings.
+                            {% else %}
+                            Start tracking your expenses by category to get insights on your spending patterns.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title"><i class="fas fa-arrow-trend-up text-success me-2"></i>Income Trends</h6>
+                        <p class="card-text small">
+                            {% with first=chart_data.income.0 last=chart_data.income|last %}
+                                {% if last > first %}
+                                <span class="text-success">Your income has increased over this period.</span> Great job growing your income!
+                                {% elif last < first %}
+                                <span class="text-warning">Your income has decreased recently.</span> Consider exploring new income opportunities.
+                                {% else %}
+                                Your income has remained stable over this period.
+                                {% endif %}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Parse the chart data
+        const chartData = JSON.parse('{{ chart_data|safe }}');
+        const expenseChartData = JSON.parse('{{ expense_chart_data|safe }}');
+        const incomeChartData = JSON.parse('{{ income_chart_data|safe }}');
+        
+        // Income Expense Chart
+        const incomeExpenseCtx = document.getElementById('income-expense-chart').getContext('2d');
+        new Chart(incomeExpenseCtx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: chartData.income,
+                        backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Expenses',
+                        data: chartData.expenses,
+                        backgroundColor: 'rgba(220, 53, 69, 0.6)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Savings',
+                        data: chartData.savings,
+                        backgroundColor: 'rgba(0, 123, 255, 0.6)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (Rs.)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Expense Pie Chart
+        const expensePieCtx = document.getElementById('expense-pie-chart').getContext('2d');
+        new Chart(expensePieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: expenseChartData.labels,
+                datasets: [{
+                    data: expenseChartData.data,
+                    backgroundColor: expenseChartData.colors || [
+                        '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', 
+                        '#1abc9c', '#e67e22', '#34495e', '#7f8c8d'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+        
+        // Income Pie Chart
+        const incomePieCtx = document.getElementById('income-pie-chart').getContext('2d');
+        new Chart(incomePieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: incomeChartData.labels,
+                datasets: [{
+                    data: incomeChartData.data,
+                    backgroundColor: incomeChartData.colors || [
+                        '#2ecc71', '#3498db', '#f39c12', '#9b59b6', '#1abc9c',
+                        '#e74c3c', '#34495e', '#e67e22', '#7f8c8d'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+        
+        // Savings Rate Chart
+        const savingsRateCtx = document.getElementById('savings-rate-chart').getContext('2d');
+        new Chart(savingsRateCtx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Savings Rate (%)',
+                    data: chartData.savings_rate,
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Savings Rate (%)'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %} 

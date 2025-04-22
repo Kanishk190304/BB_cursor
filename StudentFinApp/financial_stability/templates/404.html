@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Page Not Found - Student Financial Stability{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <img src="{% static 'img/404.svg' %}" alt="404 Error" class="img-fluid mb-4" style="max-height: 200px;">
+        <h1 class="display-4 mb-4">404</h1>
+        <h2 class="mb-4">Page Not Found</h2>
+        <p class="lead mb-4">We couldn't find the page you were looking for. It might have been moved or doesn't exist.</p>
+        <div class="mb-5">
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-home me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

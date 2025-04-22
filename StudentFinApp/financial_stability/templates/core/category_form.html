@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ action }} Category - Student Financial Stability{% endblock %}
+
+{% block extra_css %}
+<style>
+    .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 10px;
+    }
+    .icon-option {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .icon-option:hover {
+        transform: scale(1.1);
+    }
+    .icon-preview {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-{% if action == 'Create' %}plus{% else %}edit{% endif %} me-2"></i>
+                    {{ action }} Category
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6 offset-md-3 text-center">
+                            <div id="icon-preview" class="icon-preview">
+                                <i id="preview-icon" class="fas fa-tag fa-2x"></i>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Category Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.name.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ form.is_expense }}
+                                    <label class="form-check-label" for="{{ form.is_expense.id_for_label }}">
+                                        This is an expense category
+                                    </label>
+                                </div>
+                                <div class="form-text">Uncheck for income categories (e.g., Salary, Freelancing)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.color.id_for_label }}" class="form-label">Color</label>
+                        {{ form.color }}
+                        {% if form.color.errors %}
+                        <div class="text-danger">
+                            {% for error in form.color.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.icon.id_for_label }}" class="form-label">Icon</label>
+                        {{ form.icon }}
+                        {% if form.icon.errors %}
+                        <div class="text-danger">
+                            {% for error in form.icon.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">Enter a Font Awesome icon name (e.g., 'shopping-cart', 'utensils')</div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">Suggested Icons</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="icon-grid">
+                                <!-- Expense icons -->
+                                <div class="icon-option" style="background-color: #e74c3c" data-icon="shopping-cart">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #3498db" data-icon="home">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #2ecc71" data-icon="utensils">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #f39c12" data-icon="car">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #9b59b6" data-icon="heartbeat">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #1abc9c" data-icon="graduation-cap">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #e67e22" data-icon="plane">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #34495e" data-icon="tshirt">
+                                    <i class="fas fa-tshirt"></i>
+                                </div>
+                                
+                                <!-- Income icons -->
+                                <div class="icon-option" style="background-color: #2ecc71" data-icon="wallet">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #3498db" data-icon="briefcase">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #f39c12" data-icon="gift">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #9b59b6" data-icon="money-bill-wave">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #1abc9c" data-icon="chart-line">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #e74c3c" data-icon="hand-holding-usd">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #34495e" data-icon="university">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="icon-option" style="background-color: #e67e22" data-icon="laptop-code">
+                                    <i class="fas fa-laptop-code"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'category_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Categories
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-{% if action == 'Create' %}plus{% else %}save{% endif %} me-1"></i>
+                            {{ action }} Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const colorInput = document.getElementById('{{ form.color.id_for_label }}');
+        const iconInput = document.getElementById('{{ form.icon.id_for_label }}');
+        const iconPreview = document.getElementById('icon-preview');
+        const previewIcon = document.getElementById('preview-icon');
+        
+        // Update preview when color changes
+        colorInput.addEventListener('input', updatePreview);
+        
+        // Update preview when icon changes
+        iconInput.addEventListener('input', updatePreview);
+        
+        // Set up icon options
+        const iconOptions = document.querySelectorAll('.icon-option');
+        iconOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const icon = this.getAttribute('data-icon');
+                iconInput.value = icon;
+                updatePreview();
+            });
+        });
+        
+        // Initial preview update
+        updatePreview();
+        
+        function updatePreview() {
+            const color = colorInput.value;
+            const icon = iconInput.value || 'tag';
+            
+            iconPreview.style.backgroundColor = color;
+            previewIcon.className = `fas fa-${icon} fa-2x`;
+        }
+    });
+</script>
+{% endblock %} 

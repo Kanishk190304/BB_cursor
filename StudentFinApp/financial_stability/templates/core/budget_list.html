@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Budget Management - Student Financial Stability{% endblock %}
+
+{% block extra_css %}
+<style>
+    .month-select {
+        width: 110px;
+    }
+    .year-select {
+        width: 100px;
+    }
+    .progress {
+        height: 10px;
+    }
+    .budget-card {
+        transition: transform 0.2s;
+    }
+    .budget-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="fas fa-chart-pie me-2"></i>Budget Management</h1>
+    <div>
+        <a href="{% url 'budget_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Add Budget
+        </a>
+    </div>
+</div>
+
+<!-- Month/Year Selector -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" id="period-form" class="d-flex align-items-center">
+            <div class="me-2">
+                <label for="month-select" class="form-label mb-0 me-2">Month:</label>
+                <select name="month" id="month-select" class="form-select month-select d-inline-block">
+                    {% for m in months %}
+                    <option value="{{ m }}" {% if m == current_month %}selected{% endif %}>
+                        {{ m|date:"F" }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="me-3">
+                <label for="year-select" class="form-label mb-0 me-2">Year:</label>
+                <select name="year" id="year-select" class="form-select year-select d-inline-block">
+                    {% for y in years %}
+                    <option value="{{ y }}" {% if y == current_year %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-filter me-1"></i>Apply
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Budgets -->
+<div class="row">
+    {% for budget in budgets %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm budget-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge rounded-pill" style="background-color: {{ budget.category.color }}">
+                        <i class="fas fa-{{ budget.category.icon }} me-1"></i>{{ budget.category.name }}
+                    </span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a href="{% url 'budget_edit' budget.id %}" class="dropdown-item">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'budget_delete' budget.id %}" class="dropdown-item text-danger">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Rs. {{ budget.amount }}</h5>
+                {% with spent=budget.get_spent_amount percentage=budget.get_percentage %}
+                <p class="card-text text-muted">
+                    Spent: Rs. {{ spent }} ({{ percentage }}%)
+                </p>
+                <div class="progress mb-2">
+                    <div class="progress-bar {% if percentage > 85 %}bg-danger{% elif percentage > 60 %}bg-warning{% else %}bg-success{% endif %}" 
+                         role="progressbar" 
+                         style="width: {{ percentage }}%" 
+                         aria-valuenow="{{ percentage }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                <p class="card-text small mb-0">
+                    {% if percentage > 100 %}
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Over budget by Rs. {{ spent|add:"-"|add:budget.amount }}
+                    </span>
+                    {% elif percentage > 85 %}
+                    <span class="text-warning">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Approaching limit
+                    </span>
+                    {% else %}
+                    <span class="text-success">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Within budget
+                    </span>
+                    {% endif %}
+                </p>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
+                <h5>No budgets set for this month</h5>
+                <p class="text-muted">Start by creating a budget for your expenses</p>
+                <a href="{% url 'budget_create' %}" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus me-1"></i>Add Budget
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const monthSelect = document.getElementById('month-select');
+        const yearSelect = document.getElementById('year-select');
+        
+        if (monthSelect && yearSelect) {
+            monthSelect.addEventListener('change', function() {
+                document.getElementById('period-form').submit();
+            });
+            
+            yearSelect.addEventListener('change', function() {
+                document.getElementById('period-form').submit();
+            });
+        }
+    });
+</script>
+{% endblock %} 
