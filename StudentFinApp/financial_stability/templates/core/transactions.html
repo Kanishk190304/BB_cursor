@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Transactions - BachatBuddy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="my-4"><i class="fas fa-exchange-alt me-2"></i>Transactions</h1>
+        <div>
+            <a href="{% url 'add_transaction' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Transaction
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"i" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="type" class="form-label">Type</label>
+                    <select id="type" name="type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="expense" {% if selected_type == 'expense' %}selected{% endif %}>Expense</option>
+                        <option value="income" {% if selected_type == 'income' %}selected{% endif %}>Income</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="date_from" class="form-label">From Date</label>
+                    <input type="date" id="date_from" name="date_from" class="form-control" value="{{ date_from|date:'Y-m-d' }}">
+                </div>
+                <div class="col-md-2">
+                    <label for="date_to" class="form-label">To Date</label>
+                    <input type="date" id="date_to" name="date_to" class="form-control" value="{{ date_to|date:'Y-m-d' }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Transactions List -->
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Transaction History</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th class="text-end">Amount</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.date|date:"M d, Y" }}</td>
+                            <td>{{ transaction.description }}</td>
+                            <td>
+                                {% if transaction.category %}
+                                <span class="badge" style="background-color: {{ transaction.category.color }}">
+                                    <i class="fas fa-{{ transaction.category.icon }} me-1"></i>
+                                    {{ transaction.category.name }}
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary">Uncategorized</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end {% if transaction.is_expense %}text-danger{% else %}text-success{% endif %}">
+                                {% if transaction.is_expense %}-{% else %}+{% endif %}
+                                Rs. {{ transaction.amount|floatformat:2 }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'edit_transaction' transaction.id %}" class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete_transaction' transaction.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-3">No transactions found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

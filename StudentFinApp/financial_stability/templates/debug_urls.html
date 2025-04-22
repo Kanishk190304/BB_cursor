@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}URL Debugging{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Available URLs</h1>
+    
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">URL Patterns</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>URL Pattern</th>
+                        <th>Name</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for url in urls %}
+                    <tr>
+                        <td><code>{{ url.route }}</code></td>
+                        <td><code>{{ url.name }}</code></td>
+                        <td><code>{{ url.view }}</code></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

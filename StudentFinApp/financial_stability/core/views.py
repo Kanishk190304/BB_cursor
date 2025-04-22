@@ -184,7 +184,7 @@ def transaction_list_view(request):
         'date_to': date_to,
     }
     
-    return render(request, 'core/transaction_list.html', context)
+    return render(request, 'core/transactions.html', context)
 
 @login_required
 def transaction_create_view(request):
@@ -248,7 +248,7 @@ def budget_list_view(request):
         'years': range(now.year-2, now.year+3),
     }
     
-    return render(request, 'core/budget_list.html', context)
+    return render(request, 'core/budgets.html', context)
 
 @login_required
 def budget_create_view(request):
@@ -309,10 +309,10 @@ def savings_goal_list_view(request):
     savings_goals = SavingsGoal.objects.filter(user=request.user)
     
     for goal in savings_goals:
-        goal.percentage = goal.calculate_percentage()
+        goal.percentage = goal.get_percentage()
         goal.status = goal.get_status()
     
-    return render(request, 'core/savings_goal_list.html', {'savings_goals': savings_goals})
+    return render(request, 'core/savings.html', {'savings_goals': savings_goals})
 
 @login_required
 def savings_goal_create_view(request):
@@ -569,3 +569,33 @@ def income_expense_report_view(request):
     }
     
     return render(request, 'core/income_expense_report.html', context)
+
+# For debugging URLs
+def debug_urls(request):
+    """Debug view to show all available URLs"""
+    from django.urls import get_resolver
+    resolver = get_resolver()
+    url_patterns = []
+    
+    def collect_urls(patterns, parent_pattern=''):
+        for pattern in patterns:
+            if hasattr(pattern, 'pattern'):
+                sub_pattern = pattern.pattern
+                if hasattr(sub_pattern, '_route'):
+                    route = parent_pattern + sub_pattern._route
+                    if hasattr(pattern, 'name') and pattern.name:
+                        url_patterns.append({
+                            'route': route,
+                            'name': pattern.name,
+                            'view': pattern.callback.__name__ if callable(pattern.callback) else str(pattern.callback)
+                        })
+                
+                if hasattr(pattern, 'url_patterns'):
+                    collect_urls(pattern.url_patterns, route)
+    
+    collect_urls(resolver.url_patterns)
+    
+    # Sort URLs alphabetically
+    url_patterns.sort(key=lambda x: x['route'])
+    
+    return render(request, 'debug_urls.html', {'urls': url_patterns})

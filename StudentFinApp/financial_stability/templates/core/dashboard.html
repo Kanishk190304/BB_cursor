@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Dashboard - Student Financial Stability{% endblock %}
+{% block title %}Dashboard - BachatBuddy{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -22,212 +22,176 @@
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
-    <div>
-        <a href="{% url 'add_transaction' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i>Add Transaction
-        </a>
-    </div>
-</div>
-
-<!-- Financial Summary Cards -->
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm card-stats border-primary">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title text-muted">Income This Month</h6>
-                        <h2 class="card-text">Rs. {{ income }}</h2>
-                    </div>
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px">
-                        <i class="fas fa-wallet fa-2x text-primary"></i>
-                    </div>
+<div class="container">
+    <h1 class="my-4">Financial Dashboard</h1>
+    
+    <div class="row">
+        <!-- Summary Cards -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-primary h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Monthly Summary</h5>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card shadow-sm card-stats border-danger">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title text-muted">Expenses This Month</h6>
-                        <h2 class="card-text">Rs. {{ expenses }}</h2>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-success">Income</h6>
+                            <h4>Rs. {{ income|floatformat:2 }}</h4>
+                        </div>
+                        <div class="col">
+                            <h6 class="text-danger">Expenses</h6>
+                            <h4>Rs. {{ expenses|floatformat:2 }}</h4>
+                        </div>
                     </div>
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px">
-                        <i class="fas fa-shopping-cart fa-2x text-danger"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card shadow-sm card-stats border-success">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title text-muted">Savings Rate</h6>
-                        <h2 class="card-text">{{ savings_rate|floatformat:1 }}%</h2>
-                    </div>
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px">
-                        <i class="fas fa-piggy-bank fa-2x text-success"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Left Column -->
-    <div class="col-md-8">
-        <!-- Recent Transactions -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fas fa-list me-2"></i>Recent Transactions</h5>
-                <a href="{% url 'transactions' %}" class="btn btn-sm btn-outline-primary">View All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Date</th>
-                            <th>Description</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for transaction in recent_transactions %}
-                        <tr>
-                            <td>{{ transaction.date|date:"M d, Y" }}</td>
-                            <td>{{ transaction.description }}</td>
-                            <td>
-                                <span class="badge rounded-pill" style="background-color: {{ transaction.category.color }}">
-                                    <i class="fas fa-{{ transaction.category.icon }} me-1"></i>{{ transaction.category.name }}
-                                </span>
-                            </td>
-                            <td class="{% if transaction.is_expense %}text-danger{% else %}text-success{% endif %}">
-                                {{ transaction.is_expense|yesno:"-,+" }}Rs. {{ transaction.amount }}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center py-3">
-                                <p class="text-muted mb-0">No transactions yet. <a href="{% url 'add_transaction' %}">Add your first transaction</a></p>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Budget Progress -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Budget Overview</h5>
-                <a href="{% url 'budgets' %}" class="btn btn-sm btn-outline-primary">Manage Budgets</a>
-            </div>
-            <div class="card-body">
-                {% for budget in budgets %}
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1">
+                    <hr>
+                    <div class="d-flex justify-content-between">
                         <div>
-                            <span class="badge rounded-pill" style="background-color: {{ budget.category.color }}">
-                                <i class="fas fa-{{ budget.category.icon }} me-1"></i>{{ budget.category.name }}
-                            </span>
+                            <h6>Savings Rate</h6>
+                            <h4>{{ savings_rate|floatformat:0 }}%</h4>
                         </div>
-                        <div class="text-muted small">
-                            Rs. {{ budget.get_spent_amount }} / Rs. {{ budget.amount }}
-                        </div>
-                    </div>
-                    {% with percentage=budget.get_percentage %}
-                    <div class="progress">
-                        <div class="progress-bar {% if percentage > 85 %}bg-danger{% elif percentage > 60 %}bg-warning{% else %}bg-success{% endif %}" 
-                             role="progressbar" 
-                             style="width: {{ percentage }}%" 
-                             aria-valuenow="{{ percentage }}" 
-                             aria-valuemin="0" 
-                             aria-valuemax="100">
+                        <div class="align-self-center">
+                            <div class="progress-circle" data-value="{{ savings_rate|floatformat:0 }}">
+                                <span>{{ savings_rate|floatformat:0 }}%</span>
+                            </div>
                         </div>
                     </div>
-                    {% endwith %}
                 </div>
-                {% empty %}
-                <div class="text-center py-4">
-                    <p class="text-muted mb-3">You haven't set up any budgets yet.</p>
-                    <a href="{% url 'add_budget' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Create Budget
+            </div>
+        </div>
+        
+        <!-- Recent Transactions -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Transactions</h5>
+                    <a href="{% url 'transactions' %}" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in recent_transactions %}
+                                <tr>
+                                    <td>{{ transaction.date|date:"M d, Y" }}</td>
+                                    <td>{{ transaction.description }}</td>
+                                    <td>
+                                        {% if transaction.category %}
+                                        <span class="badge" style="background-color: {{ transaction.category.color }}">
+                                            <i class="fas fa-{{ transaction.category.icon }} me-1"></i>
+                                            {{ transaction.category.name }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Uncategorized</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end {% if transaction.is_expense %}text-danger{% else %}text-success{% endif %}">
+                                        {% if transaction.is_expense %}-{% else %}+{% endif %}
+                                        Rs. {{ transaction.amount|floatformat:2 }}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-3">No recent transactions</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'add_transaction' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Transaction
                     </a>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
-
-    <!-- Right Column -->
-    <div class="col-md-4">
-        <!-- Savings Goals -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fas fa-bullseye me-2"></i>Savings Goals</h5>
-                <a href="{% url 'savings' %}" class="btn btn-sm btn-outline-primary">View All</a>
-            </div>
-            <div class="card-body">
-                {% for goal in savings_goals %}
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <h6 class="mb-0">{{ goal.name }}</h6>
-                        <span class="badge {% if goal.is_completed %}bg-success{% elif goal.get_status == 'On Track' %}bg-info{% elif goal.get_status == 'Behind' %}bg-warning{% else %}bg-danger{% endif %} status-badge">
-                            {{ goal.get_status }}
-                        </span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-1">
-                        <small class="text-muted">Rs. {{ goal.current_amount }} of Rs. {{ goal.target_amount }}</small>
-                        <small class="text-muted">{{ goal.get_percentage }}%</small>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ goal.get_percentage }}%" 
-                             aria-valuenow="{{ goal.get_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+    
+    <div class="row">
+        <!-- Budget Overview -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-money-bill-wave me-2"></i>Budget Overview</h5>
+                    <a href="{% url 'budgets' %}" class="btn btn-sm btn-light">View All</a>
                 </div>
-                {% empty %}
-                <div class="text-center py-4">
-                    <p class="text-muted mb-3">You haven't set any savings goals yet.</p>
-                    <a href="{% url 'add_savings' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Add Savings Goal
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Achievements -->
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Achievements</h5>
-            </div>
-            <div class="card-body">
-                {% for achievement in achievements %}
-                <div class="d-flex align-items-center mb-3">
-                    <div class="me-3">
-                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px">
-                            <i class="fas fa-{{ achievement.icon }} text-warning"></i>
+                <div class="card-body">
+                    {% for budget in budgets %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div>
+                                <span class="badge" style="background-color: {{ budget.category.color }}">
+                                    <i class="fas fa-{{ budget.category.icon }} me-1"></i>
+                                    {{ budget.category.name }}
+                                </span>
+                            </div>
+                            <div class="text-muted small">
+                                Rs. {{ budget.get_spent_amount|floatformat:2 }} / Rs. {{ budget.amount|floatformat:2 }}
+                            </div>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            {% with percentage=budget.get_percentage %}
+                            {% if percentage < 70 %}
+                            <div class="progress-bar bg-success" style="width: {{ percentage }}%"></div>
+                            {% elif percentage < 100 %}
+                            <div class="progress-bar bg-warning" style="width: {{ percentage }}%"></div>
+                            {% else %}
+                            <div class="progress-bar bg-danger" style="width: {{ percentage }}%"></div>
+                            {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
-                    <div>
-                        <h6 class="mb-0">{{ achievement.name }}</h6>
-                        <small class="text-muted">{{ achievement.date_earned|date:"M d, Y" }}</small>
+                    {% empty %}
+                    <p class="text-center py-3">No budgets created yet</p>
+                    {% endfor %}
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'add_budget' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Create Budget
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Savings Goals -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-piggy-bank me-2"></i>Savings Goals</h5>
+                    <a href="{% url 'savings' %}" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="card-body">
+                    {% for goal in savings_goals %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="mb-0">{{ goal.name }}</h6>
+                            <div class="text-muted small">
+                                Rs. {{ goal.current_amount|floatformat:2 }} / Rs. {{ goal.target_amount|floatformat:2 }}
+                            </div>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            {% with percentage=goal.get_percentage %}
+                            <div class="progress-bar bg-success" style="width: {{ percentage }}%"></div>
+                            {% endwith %}
+                        </div>
                     </div>
+                    {% empty %}
+                    <p class="text-center py-3">No savings goals created yet</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="text-center py-4">
-                    <p class="text-muted">Start tracking your finances to earn achievements!</p>
+                <div class="card-footer text-center">
+                    <a href="{% url 'add_savings' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Savings Goal
+                    </a>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
