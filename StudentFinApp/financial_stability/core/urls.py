@@ -2,14 +2,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Authentication URLs
+    # Authentication
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     
-    # Dashboard and profile
+    # Dashboard and Profile
     path('', views.dashboard_view, name='dashboard'),
-    path('home/', views.dashboard_view, name='home'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
     path('profile/', views.profile_view, name='profile'),
     
     # Transactions
@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Savings Goals
     path('savings/', views.savings_goal_list_view, name='savings'),
-    path('savings/add/', views.savings_goal_create_view, name='add_savings'),
+    path('savings/add/', views.savings_goal_create_view, name='add_savings_goal'),
     path('savings/<int:pk>/edit/', views.savings_goal_edit_view, name='edit_savings_goal'),
     path('savings/<int:pk>/delete/', views.savings_goal_delete_view, name='delete_savings_goal'),
     path('savings/<int:pk>/update/', views.update_savings_view, name='update_savings'),
@@ -35,8 +35,9 @@ urlpatterns = [
     path('categories/', views.category_list_view, name='categories'),
     path('categories/add/', views.category_create_view, name='add_category'),
     path('categories/<int:pk>/edit/', views.category_edit_view, name='edit_category'),
+    path('categories/<int:pk>/delete/', views.category_delete_view, name='delete_category'),
     
-    # Reports and Analytics
+    # Reports
     path('reports/income-expense/', views.income_expense_report_view, name='income_expense_report'),
     
     # Debug

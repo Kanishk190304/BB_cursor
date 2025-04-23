@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
@@ -43,15 +43,26 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = CustomAuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        # Print debugging information
+        print(f"Attempting login with username: {username}")
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            print(f"Authentication successful for user: {username}")
             login(request, user)
             return redirect('dashboard')
+        else:
+            print(f"Authentication failed for username: {username}")
+            messages.error(request, "Invalid username or password.")
+            return render(request, 'core/login_simple.html')
     else:
         form = CustomAuthenticationForm()
     
-    return render(request, 'core/login.html', {'form': form})
+    return render(request, 'core/login_simple.html', {'form': form})
 
 def logout_view(request):
     logout(request)
@@ -152,7 +163,7 @@ def transaction_list_view(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
     
-    # Base queryset
+    # Base queryset - important: order by newest first
     transactions = Transaction.objects.filter(user=request.user).order_by('-date')
     
     # Apply filters
@@ -164,13 +175,19 @@ def transaction_list_view(request):
         transactions = transactions.filter(is_expense=is_expense)
     
     if date_from:
-        date_from = datetime.strptime(date_from, '%Y-%m-%d')
-        transactions = transactions.filter(date__gte=date_from)
+        try:
+            date_from = datetime.strptime(date_from, '%Y-%m-%d')
+            transactions = transactions.filter(date__gte=date_from)
+        except ValueError:
+            pass
     
     if date_to:
-        date_to = datetime.strptime(date_to, '%Y-%m-%d')
-        date_to = datetime.combine(date_to, datetime.max.time())
-        transactions = transactions.filter(date__lte=date_to)
+        try:
+            date_to = datetime.strptime(date_to, '%Y-%m-%d')
+            date_to = datetime.combine(date_to, datetime.max.time())
+            transactions = transactions.filter(date__lte=date_to)
+        except ValueError:
+            pass
     
     # Get categories for filter dropdown
     categories = Category.objects.all()
@@ -189,13 +206,20 @@ def transaction_list_view(request):
 @login_required
 def transaction_create_view(request):
     if request.method == 'POST':
+        # Add debug info
+        print("POST Data:", request.POST)
+        
         form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.save()
+            print(f"Transaction saved with ID: {transaction.id}")
             messages.success(request, "Transaction added successfully!")
-            return redirect('transaction_list')
+            return redirect('transactions')
+        else:
+            # Print form errors
+            print("Form Errors:", form.errors)
     else:
         form = TransactionForm(user=request.user)
     
@@ -210,11 +234,11 @@ def transaction_edit_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Transaction updated successfully!")
-            return redirect('transaction_list')
+            return redirect('transactions')
     else:
         form = TransactionForm(instance=transaction, user=request.user)
     
-    return render(request, 'core/transaction_form.html', {'form': form, 'action': 'Edit'})
+    return render(request, 'core/transaction_form.html', {'form': form, 'transaction': transaction, 'action': 'Edit'})
 
 @login_required
 def transaction_delete_view(request, pk):
@@ -223,7 +247,7 @@ def transaction_delete_view(request, pk):
     if request.method == 'POST':
         transaction.delete()
         messages.success(request, "Transaction deleted successfully!")
-        return redirect('transaction_list')
+        return redirect('transactions')
     
     return render(request, 'core/transaction_confirm_delete.html', {'transaction': transaction})
 
@@ -253,6 +277,9 @@ def budget_list_view(request):
 @login_required
 def budget_create_view(request):
     if request.method == 'POST':
+        # Add debug info
+        print("Budget POST Data:", request.POST)
+        
         form = BudgetForm(request.POST, user=request.user)
         if form.is_valid():
             budget = form.save(commit=False)
@@ -268,10 +295,15 @@ def budget_create_view(request):
             
             if existing_budget:
                 messages.error(request, "A budget for this category already exists for the selected month/year.")
+                print("Budget already exists for this category/month/year")
             else:
                 budget.save()
+                print(f"Budget saved with ID: {budget.id}")
                 messages.success(request, "Budget created successfully!")
-                return redirect('budget_list')
+                return redirect('budgets')
+        else:
+            # Print form errors
+            print("Budget Form Errors:", form.errors)
     else:
         form = BudgetForm(user=request.user)
     
@@ -284,13 +316,24 @@ def budget_edit_view(request, pk):
     if request.method == 'POST':
         form = BudgetForm(request.POST, instance=budget, user=request.user)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Budget updated successfully!")
-            return redirect('budget_list')
+            # Check if editing would create a duplicate
+            existing_budget = Budget.objects.filter(
+                user=request.user,
+                category=form.cleaned_data['category'],
+                month=form.cleaned_data['month'],
+                year=form.cleaned_data['year']
+            ).exclude(pk=budget.pk).first()
+            
+            if existing_budget:
+                messages.error(request, "A budget for this category already exists for the selected month/year.")
+            else:
+                form.save()
+                messages.success(request, "Budget updated successfully!")
+                return redirect('budgets')
     else:
         form = BudgetForm(instance=budget, user=request.user)
     
-    return render(request, 'core/budget_form.html', {'form': form, 'action': 'Edit'})
+    return render(request, 'core/budget_form.html', {'form': form, 'budget': budget, 'action': 'Edit'})
 
 @login_required
 def budget_delete_view(request, pk):
@@ -299,7 +342,7 @@ def budget_delete_view(request, pk):
     if request.method == 'POST':
         budget.delete()
         messages.success(request, "Budget deleted successfully!")
-        return redirect('budget_list')
+        return redirect('budgets')
     
     return render(request, 'core/budget_confirm_delete.html', {'budget': budget})
 
@@ -317,15 +360,22 @@ def savings_goal_list_view(request):
 @login_required
 def savings_goal_create_view(request):
     if request.method == 'POST':
-        form = SavingsGoalForm(request.POST)
+        # Add debug info
+        print("Savings Goal POST Data:", request.POST)
+        
+        form = SavingsGoalForm(request.POST, user=request.user)
         if form.is_valid():
             savings_goal = form.save(commit=False)
             savings_goal.user = request.user
             savings_goal.save()
+            print(f"Savings goal saved with ID: {savings_goal.id}")
             messages.success(request, "Savings goal created successfully!")
-            return redirect('savings_goal_list')
+            return redirect('savings')
+        else:
+            # Print form errors
+            print("Savings Goal Form Errors:", form.errors)
     else:
-        form = SavingsGoalForm()
+        form = SavingsGoalForm(user=request.user)
     
     return render(request, 'core/savings_goal_form.html', {'form': form, 'action': 'Create'})
 
@@ -334,15 +384,17 @@ def savings_goal_edit_view(request, pk):
     savings_goal = get_object_or_404(SavingsGoal, pk=pk, user=request.user)
     
     if request.method == 'POST':
-        form = SavingsGoalForm(request.POST, instance=savings_goal)
+        form = SavingsGoalForm(request.POST, instance=savings_goal, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Savings goal updated successfully!")
-            return redirect('savings_goal_list')
+            return redirect('savings')
+        else:
+            print("Savings Goal Edit Form Errors:", form.errors)
     else:
-        form = SavingsGoalForm(instance=savings_goal)
+        form = SavingsGoalForm(instance=savings_goal, user=request.user)
     
-    return render(request, 'core/savings_goal_form.html', {'form': form, 'action': 'Edit'})
+    return render(request, 'core/savings_goal_form.html', {'form': form, 'savings_goal': savings_goal, 'action': 'Edit'})
 
 @login_required
 def savings_goal_delete_view(request, pk):
@@ -351,7 +403,7 @@ def savings_goal_delete_view(request, pk):
     if request.method == 'POST':
         savings_goal.delete()
         messages.success(request, "Savings goal deleted successfully!")
-        return redirect('savings_goal_list')
+        return redirect('savings')
     
     return render(request, 'core/savings_goal_confirm_delete.html', {'savings_goal': savings_goal})
 
@@ -402,7 +454,9 @@ def update_savings_view(request, pk):
                     date_earned=timezone.now()
                 )
             
-            return redirect('savings_goal_list')
+            return redirect('savings')
+        else:
+            print("Update Savings Form Errors:", form.errors)
     else:
         form = UpdateSavingsForm(savings_goal=savings_goal)
     
@@ -419,9 +473,11 @@ def category_create_view(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            form.save()
+            category = form.save(commit=False)
+            category.user = request.user
+            category.save()
             messages.success(request, "Category created successfully!")
-            return redirect('category_list')
+            return redirect('categories')
     else:
         form = CategoryForm()
     
@@ -429,18 +485,29 @@ def category_create_view(request):
 
 @login_required
 def category_edit_view(request, pk):
-    category = get_object_or_404(Category, pk=pk)
+    category = get_object_or_404(Category, pk=pk, user=request.user)
     
     if request.method == 'POST':
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
             messages.success(request, "Category updated successfully!")
-            return redirect('category_list')
+            return redirect('categories')
     else:
         form = CategoryForm(instance=category)
     
-    return render(request, 'core/category_form.html', {'form': form, 'action': 'Edit'})
+    return render(request, 'core/category_form.html', {'form': form, 'category': category, 'action': 'Edit'})
+
+@login_required
+def category_delete_view(request, pk):
+    category = get_object_or_404(Category, pk=pk, user=request.user)
+    
+    if request.method == 'POST':
+        category.delete()
+        messages.success(request, "Category deleted successfully!")
+        return redirect('categories')
+    
+    return render(request, 'core/category_confirm_delete.html', {'category': category})
 
 # Reports and Analytics
 @login_required

@@ -1,139 +1,105 @@
-# BachatBuddy - Student Financial Stability App
+# BachatBuddy - Financial Stability App
 
-BachatBuddy is a comprehensive financial management application designed specifically for students. The app helps students track expenses, set budgets, create savings goals, and develop healthy financial habits.
+BachatBuddy is a comprehensive financial management application built with Django that helps users track their expenses, create budgets, set savings goals, and manage their overall financial health.
 
 ## Features
 
-- **Expense Tracking**: Log your daily expenses and income with detailed categorization
-- **Budget Management**: Set monthly budgets for different expense categories
-- **Savings Goals**: Create and track progress towards your financial goals
-- **Financial Analytics**: Visualize your spending patterns and identify areas for improvement
-- **Category Management**: Customize expense and income categories to suit your needs
-- **User Profiles**: Personalize your experience with customizable settings
+- **User Authentication**: Secure registration and login
+- **Dashboard**: Visualize your financial overview
+- **Transaction Management**: Track all your income and expenses
+- **Budget Planning**: Set monthly budgets by category
+- **Savings Goals**: Create and track progress towards financial goals
+- **Reports**: Analyze your spending patterns over time
 
-## Tech Stack
-
-- **Backend**: Django 5.2
-- **Frontend**: HTML, CSS, JavaScript, Bootstrap 5
-- **Database**: SQLite (default), easily configurable for PostgreSQL or MySQL
-- **Charts**: Chart.js
-- **Icons**: Font Awesome 6
-
-## Installation
+## Getting Started
 
 ### Prerequisites
 
-- Python 3.9 or higher
-- pip (Python package manager)
-- Virtual environment (recommended)
+- Python 3.8 or higher
+- MySQL 5.7 or higher
 
-### Setup Instructions
+### Installation
 
-1. **Clone the repository**
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/bachatbuddy.git
+   cd bachatbuddy
+   ```
 
-```bash
-git clone https://github.com/yourusername/bachatbuddy.git
-cd bachatbuddy
-```
+2. Set up the MySQL database:
+   
+   **For Windows:**
+   ```powershell
+   # Run the setup script
+   .\setup_mysql.ps1
+   ```
+   
+   **For Linux/Mac:**
+   ```bash
+   # Make the script executable
+   chmod +x setup_mysql.sh
+   
+   # Run the setup script
+   ./setup_mysql.sh
+   ```
+   
+   Alternatively, follow the manual setup in `MYSQL_SETUP_GUIDE.md`.
 
-2. **Create and activate a virtual environment**
+3. Create a superuser (admin account):
+   ```bash
+   cd financial_stability
+   python manage.py createsuperuser
+   ```
 
-```bash
-# For Windows
-python -m venv venv
-venv\Scripts\activate
+4. Run the development server:
+   ```bash
+   python manage.py runserver
+   ```
 
-# For macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
-```
+5. Open your browser and go to http://localhost:8000
 
-3. **Install dependencies**
+## Database Schema
 
-```bash
-pip install -r requirements.txt
-```
+The application uses the following key models:
 
-4. **Navigate to the project directory**
-
-```bash
-cd StudentFinApp/financial_stability
-```
-
-5. **Apply migrations**
-
-```bash
-python manage.py migrate
-```
-
-6. **Load initial data (categories)**
-
-```bash
-python manage.py loaddata core/fixtures/initial_categories.json
-```
-
-7. **Create a superuser**
-
-```bash
-python manage.py createsuperuser
-```
-
-8. **Run the development server**
-
-```bash
-python manage.py runserver
-```
-
-9. **Access the application**
-
-Open your browser and navigate to `http://127.0.0.1:8000`
-
-## Screenshots
-
-![Dashboard](dashboard.png)
-![Transactions](transactions.png)
-![Budget](budget.png)
-![Savings Goals](savings.png)
+- **User**: Django's built-in user model
+- **UserProfile**: Extended user information
+- **Category**: Transaction categories
+- **Transaction**: Income and expense records
+- **Budget**: Monthly budgets by category
+- **SavingsGoal**: Financial targets and tracking
+- **Achievement**: User accomplishments
 
 ## Development
 
-### Project Structure
+### Running Tests
 
-```
-financial_stability/
-├── core/                 # Main app with all financial functionality
-│   ├── fixtures/         # Initial data
-│   ├── migrations/       # Database migrations
-│   ├── templates/        # HTML templates
-│   ├── forms.py          # Form definitions
-│   ├── models.py         # Database models
-│   ├── urls.py           # URL routing
-│   └── views.py          # View controllers
-├── static/               # Static files (CSS, JS, images)
-│   ├── css/              # CSS files
-│   ├── js/               # JavaScript files
-│   └── img/              # Images
-├── templates/            # Base templates
-└── financial_stability/  # Project settings
+```bash
+python manage.py test
 ```
 
-### Making Changes
+### Coding Style
 
-1. Create a new branch for your feature
-2. Make changes and test locally
-3. Commit changes to your branch
-4. Open a pull request
+This project follows the PEP 8 style guide for Python code.
+
+## Deployment
+
+For production deployment:
+
+1. Set `DEBUG=False` in your `.env` file
+2. Configure a proper web server (Nginx, Apache)
+3. Use a production-grade WSGI server (Gunicorn, uWSGI)
+4. Set up proper database backups
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgements
+## Acknowledgments
 
-- Bootstrap for the responsive UI components
-- Chart.js for data visualization
+- Bootstrap for frontend components
 - Font Awesome for icons
-- Django community for the excellent framework
+- Chart.js for data visualization
 
 ## Contact
 

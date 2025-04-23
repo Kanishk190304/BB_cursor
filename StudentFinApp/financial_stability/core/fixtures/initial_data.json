@@ -1,0 +1,122 @@
+[
+  {
+    "model": "core.category",
+    "pk": 1,
+    "fields": {
+      "name": "Food",
+      "icon": "utensils",
+      "color": "#FF5733",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 2,
+    "fields": {
+      "name": "Transportation",
+      "icon": "car",
+      "color": "#3498DB",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 3,
+    "fields": {
+      "name": "Rent",
+      "icon": "home",
+      "color": "#9B59B6",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 4,
+    "fields": {
+      "name": "Utilities",
+      "icon": "bolt",
+      "color": "#F1C40F",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 5,
+    "fields": {
+      "name": "Entertainment",
+      "icon": "film",
+      "color": "#2ECC71",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 6,
+    "fields": {
+      "name": "Education",
+      "icon": "graduation-cap",
+      "color": "#E74C3C",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 7,
+    "fields": {
+      "name": "Healthcare",
+      "icon": "medkit",
+      "color": "#1ABC9C",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 8,
+    "fields": {
+      "name": "Shopping",
+      "icon": "shopping-cart",
+      "color": "#F39C12",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 9,
+    "fields": {
+      "name": "Savings",
+      "icon": "piggy-bank",
+      "color": "#4CAF50",
+      "is_expense": true
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 10,
+    "fields": {
+      "name": "Salary",
+      "icon": "wallet",
+      "color": "#27AE60",
+      "is_expense": false
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 11,
+    "fields": {
+      "name": "Freelance",
+      "icon": "laptop",
+      "color": "#16A085",
+      "is_expense": false
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 12,
+    "fields": {
+      "name": "Gifts",
+      "icon": "gift",
+      "color": "#E91E63",
+      "is_expense": false
+    }
+  }
+] 

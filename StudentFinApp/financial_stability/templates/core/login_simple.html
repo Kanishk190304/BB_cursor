@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Simple Login{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 0 auto; padding: 20px;">
+    <h2>Login</h2>
+    
+    {% if messages %}
+    <div style="background-color: #f8d7da; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            <label for="id_username">Username:</label>
+            <input type="text" name="username" id="id_username" style="width: 100%; padding: 8px; margin-top: 5px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="id_password">Password:</label>
+            <input type="password" name="password" id="id_password" style="width: 100%; padding: 8px; margin-top: 5px;">
+        </div>
+        
+        <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+            Login
+        </button>
+    </form>
+    
+    <div style="margin-top: 15px;">
+        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+    </div>
+</div>
+{% endblock %} 
